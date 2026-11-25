@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "servers": {
+      "figcraft-app": {
+        "type": "local",
+        "command": [
+          "C:/Users/LENOVO/AppData/Local/Programs/ArtCraft/FigCraft/figcraft-cli.exe",
+          "mcp",
+          "--attach",
+          "7979"
+        ]
+      }
+    }
+  }
+}
