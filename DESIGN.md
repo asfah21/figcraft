@@ -1,226 +1,164 @@
-# DESIGN.md: Website Portofolio Pribadi
+# DESIGN.md: Spesifikasi Visual Sanggar ERP untuk Template Next.js
 
-**Instruksi untuk agent:** Baca seluruh file ini di awal setiap sesi desain, lalu kerjakan sesuai urutan di bawah. Semua angka di file ini adalah ukuran dalam piksel pada kanvas 1440 px (Desktop) atau 390 px (Mobile). Ikuti angka itu persis. Jangan mengecilkan, menggeser, atau menyederhanakan.
+**Tujuan:** template Next.js ini harus tampil 100% mengikuti desain **Sanggar ERP** di FigCraft. File ini adalah catatan tertulis dari canvas, bukan pengganti canvas. Jika ada perbedaan antara file ini dan canvas, **canvas yang menang**.
 
-**Urutan kerja (kerjakan semuanya tanpa berhenti di tiap langkah, pakai tool figcraft-app):**
-0. Persiapan:
-   - Kalau sudah ada frame `Desktop` atau `Mobile` lama di canvas, hapus dulu keduanya, lalu bangun ulang dari awal sesuai file ini.
-   - Cek font Plus Jakarta Sans sudah terpasang. Kalau belum, download dari sumber resmi dan pasang ke folder font pengguna: macOS `~/Library/Fonts`, Windows `%LOCALAPPDATA%\Microsoft\Windows\Fonts`. Jelaskan tiap command sebelum dijalankan, jangan pakai sudo atau hak admin.
-   - Cek koneksi ke FigCraft memakai tool figcraft-app. Kalau sudah terhubung, jangan tutup atau buka ulang FigCraft. Kalau belum terhubung, tutup FigCraft kalau sedang terbuka, lalu buka lagi dengan control channel: macOS `open -a FigCraft --args --control 7979`, Windows `Start-Process -FilePath "<path absolut figcraft.exe>" -ArgumentList "--control 7979"`. Cek channel nyala: macOS `lsof -nP -iTCP:7979 -sTCP:LISTEN`, Windows `netstat -ano | findstr 7979`. Lalu berhenti dan beri tahu saya untuk restart OpenCode dari folder ini.
-1. Buat design token di FigCraft sesuai bagian 1. Jangan membangun seksi sebelum token selesai.
-2. Buat frame `Desktop` dan `Mobile` sesuai bagian 4.
-3. Bangun seksi Desktop satu per satu: Navbar, Hero, Proyek, Tentang, Kontak, Footer. Gunakan posisi (x, y), lebar, tinggi, dan ukuran font persis seperti di bagian 2.
-4. Bangun versi Mobile (390 px) sesuai bagian 2 (sub-bagian Mobile).
-5. Beri laporan akhir: apa yang berhasil, apa yang pakai placeholder, apa yang tidak sesuai DESIGN.md.
+**Sumber kebenaran:** `C:\Users\LENOVO\Downloads\Sanggar ERP.figcraft` (terbuka di FigCraft). Gunakan `figcraft-app`. Acuan adalah frame berprefix `E ·` (versi terbaru). Frame `Lama ·` dan `Arsip Sidebar ·` adalah arsip dan **tidak boleh** dipakai sebagai acuan.
 
-**Cara kerja (wajib):**
-- Kirim beberapa elemen sekaligus dalam satu tool call (atau `batch`) kalau tool mendukung, tetapi pecah per sub-bagian seksi (misalnya Hero: foto, kolom kiri, kolom kanan, empat keahlian) supaya tiap call selesai kurang dari 60 detik. Satu seksi cukup beberapa call, bukan satu call per elemen.
-- Koneksi ke FigCraft punya batas 60 detik per request dan tidak diulang otomatis. Kalau satu call timeout atau error dengan pesan bahwa operasi "mungkin sudah selesai", cek dulu isi dokumen (inspect_document) sebelum mengulang, supaya elemen tidak dobel.
-- Jangan membaca ulang node atau mengambil screenshot setelah tiap elemen atau tiap seksi.
-- Buka tiap gambar referensi satu kali, tepat sebelum seksinya dibangun.
-- Periksa hasil di canvas hanya di tiga titik: (1) setelah Hero Desktop selesai, karena itu seksi paling rumit; (2) setelah seluruh Desktop selesai; (3) setelah Mobile selesai. Di tiap titik, kumpulkan semua yang meleset lalu perbaiki sekaligus.
-- Jangan membangun ulang seksi yang sudah benar.
-
-**Aturan wajib:**
-- Sebelum membangun tiap seksi, buka gambar referensi seksi itu di folder `referensi/` (bagian 3) dan bandingkan proporsinya: ukuran judul terhadap lebar halaman, posisi teks, jarak antar elemen. Tiru tata letak dan proporsinya. Jangan menyalin teks, foto, nama brand, atau logo dari gambar referensi.
-- Semua warna, font, ukuran teks, jarak, dan radius harus memakai token di bagian 1. Jangan membuat nilai baru di luar token.
-- Judul besar (Hero, Proyek, Kontak) harus benar-benar besar sesuai angka di file ini. Teks yang terlihat kecil dibanding referensi berarti salah.
-- Hero dan Footer membentang penuh selebar frame (1440 px), tanpa margin kiri-kanan. Seksi lain memakai padding kiri-kanan 48 px (lebar isi 1344 px).
-- Teks tidak boleh menempel ke tepi atau terpotong. Teks tidak boleh menimpa wajah subjek di foto (rambut atau baju yang gelap boleh ditimpa teks putih asalkan tetap terbaca). Antar elemen tidak boleh saling tumpuk, kecuali yang memang ditentukan (Navbar di atas Hero, teks di atas foto Hero).
-- Setiap kotak teks diberi lebar tetap sesuai file ini supaya tidak pecah baris sembarangan.
-- Pasang gambar ke desain memakai path absolut (gabungkan folder project dengan path relatif berikut): `public/foto/hero.png`, `public/foto/tentang.png`, `public/proyek/github-radar.webp`, `public/proyek/company-profile.webp`, `public/proyek/landing-page.webp`.
-- Kalau FigCraft tidak bisa memuat .webp, buat salinan PNG di folder sementara di luar project dan pakai itu. Jangan ubah atau tambah file di `public/`.
-- Kalau gambar tetap tidak bisa dimuat, pakai kotak placeholder `#141414` dengan label nama file dan catat di laporan akhir.
-- Di tiga titik pemeriksaan (lihat "Cara kerja"), bandingkan hasil di canvas dengan referensi, baris "Cek" tiap seksi, dan angka di file ini: tidak ada teks menempel ke tepi, menimpa wajah, atau terlalu kecil. Perbaiki sendiri kalau meleset.
-- Kalau ada tool yang gagal, tampilkan error aslinya. Jangan menebak.
-- Kalau font Plus Jakarta Sans tidak tersedia di FigCraft setelah dipasang, beri tahu saya dan pakai font sans-serif geometris yang paling mirip sebagai pengganti sementara.
+## 0. Aturan membaca canvas
+- Baca `AGENTS.md` di root project sebelum bekerja. Cek versi Next.js, React, dan Tailwind di `package.json`, lalu baca guide yang relevan di `node_modules/next/dist/docs/` sebelum menulis kode.
+- Satu sesi cukup membaca canvas sekali di awal. Koneksi FigCraft punya batas 60 detik per request: baca per frame, jangan seluruh dokumen sekaligus.
+- Urutan ekstraksi yang wajib:
+  1. `variable.export` dengan `format: "tailwind"` → daftar token warna persis.
+  2. `get_node` pada frame yang disebut di bagian 3 → ukuran, posisi, teks, susunan.
+  3. `inspect.code` dengan `language: "tailwind"` / `"react"` → pola kelas dan struktur; **tulis ulang dengan rapi**, jangan menempel kode export mentah.
+  4. `screenshot` hanya untuk pengecekan akhir, bukan untuk menebak ukuran.
+- Jangan mengubah, menyimpan ulang, atau memindahkan file Sanggar ERP. File ini hanya dibaca.
+- Jangan memakai gaya portofolio lama: tidak ada latar `#0C0C0C`, aksen oranye `#F26A21`, Hero, Proyek, Tentang, atau Kontak.
 
 ## 1. Design Token
-### Warna
-- **Background utama:** `#0C0C0C`
-- **Background panel/kartu:** `#141414`
-- **Teks utama:** `#FFFFFF`
-- **Teks sekunder:** `#A1A1AA`
-- **Aksen (oranye):** `#F26A21`
-- **Border halus:** `#FFFFFF1A` (putih 10%)
-- **Border tegas:** `#FFFFFF40` (putih 25%), untuk garis pemisah dan garis bawah input
-- **Gradasi hero:** `#F26A21` (kiri atas) → `#8A2E17` (tengah) → `#1A0F0D` (kanan bawah)
 
-### Aturan pemakaian warna
-- **Background halaman:** `#0C0C0C`. Panel dan kartu yang perlu terpisah dari latar memakai `#141414`.
-- **Teks:** judul dan teks penting `#FFFFFF`. Deskripsi, label kecil, dan keterangan `#A1A1AA`.
-- **Aksen oranye `#F26A21`:** hanya untuk elemen penekanan: tanda `#` pada nomor keahlian, lingkaran panah pada tombol, label kecil "TENTANG SAYA", tombol "Kirim", dan ikon yang di-hover. Jangan dipakai untuk blok besar atau paragraf.
-- **Gradasi hero:** hanya dipakai di seksi Hero.
-- **Di atas gradasi oranye** semua teks memakai putih (`#FFFFFF`, atau putih 70% untuk deskripsi).
+### 1.1 Warna (dari collection `Sanggar/Colors`, mode `Mode 1`)
+Nama variable FigCraft di sebelah kiri, custom property Tailwind di kanan.
 
-### Font
-Semua teks memakai `Plus Jakarta Sans`.
-- **Light** (300): sebagian kalimat besar di Tentang
-- **Regular** (400): isi paragraf, label input
-- **Medium** (500): menu, tombol, label huruf renggang
-- **SemiBold** (600): sapaan, tagline, nama keahlian
-- **Bold** (700): judul besar, logo, nama proyek, email dan nomor
+| Variable FigCraft | CSS variable | Hex |
+|---|---|---|
+| `brand/green` | `--color-green` | `#77B844` |
+| `brand/green-deep` | `--color-green-deep` | `#3F7A1C` |
+| `brand/green-soft` | `--color-green-soft` | `#ECFDF3` |
+| `brand/blue` | `--color-blue` | `#2462AF` |
+| `brand/blue-soft` | `--color-blue-soft` | `#EFF6FF` |
+| `surface/dark` | `--color-dark` | `#1E5296` |
+| `surface/card` | `--color-card` | `#FFFFFF` |
+| `surface/subtle` | `--color-surface-subtle` | `#F7F9FC` |
+| `surface/canvas` | `--color-canvas` | `#F4F7FA` |
+| `border/subtle` | `--color-border-subtle` | `#EEF2F6` |
+| `border/strong` | `--color-strong` | `#E2E8F0` |
+| `text/primary` | `--color-primary` | `#111827` |
+| `text/secondary` | `--color-secondary` | `#475569` |
+| `text/muted` | `--color-muted` | `#94A3B8` |
+| `text/on-dark` | `--color-on-dark` | `#FFFFFF` |
+| `status/safe-text` | `--color-safe-text` | `#4E8A25` |
+| `status/safe-bg` | `--color-safe-bg` | `#EEF7E6` |
+| `status/warn-text` | `--color-warn-text` | `#B45309` |
+| `status/warn-bg` | `--color-warn-bg` | `#FEF3C7` |
+| `status/danger-text` | `--color-danger-text` | `#B91C1C` |
+| `status/danger-bg` | `--color-danger-bg` | `#FEE2E2` |
+| `status/stale-text` | `--color-stale-text` | `#4B5563` |
+| `status/stale-bg` | `--color-stale-bg` | `#F1F5F9` |
 
-### Ukuran teks (px)
-- **xs** `12`: nomor kecil di Mobile
-- **sm** `14`: label input, info kecil, kategori, teks hak cipta
-- **base** `16`: menu, tombol, deskripsi, bio, nomor keahlian
-- **lg** `18`: nama keahlian, nama skill
-- **xl** `24`: logo, nama proyek
-- **2xl** `32`: sapaan Hero, tagline Hero, subjudul Proyek
-- **3xl** `48`: kalimat besar di Tentang, email dan nomor di Kontak
-- **display** `144`: judul Hero ("Software Engineer")
-- **display-xl** `208`: judul besar "Proyek" dan "Hubungi Saya"
-- **display-m** `72`: judul Hero dan Proyek di Mobile
+**Aturan pakai warna:**
+- Kanvas halaman `#F4F7FA`; kartu dan topbar `#FFFFFF`; latar kontrol/input `#F7F9FC`.
+- Garis kartu dan tabel memakai hairline 1 px `#EEF2F6`; pemisah kuat/topbar `#E2E8F0`. Tanpa drop shadow tebal.
+- Hijau `#77B844` untuk identitas merek dan aksi utama; `#3F7A1C` untuk teks aktif di atas `#ECFDF3`. Biru `#2462AF` hanya untuk informasi.
+- Warna status hanya untuk badge/status. Jangan dipakai sebagai blok dekoratif besar.
+- Di atas panel biru tua `#1E5296`, semua teks memakai `#FFFFFF`.
 
-### Letter-spacing dan line-height
-- display dan display-xl: letter-spacing -3%, line-height 1.0
-- 2xl dan 3xl: letter-spacing -1%, line-height 1.1 (3xl), 1.35 (2xl)
-- Label huruf renggang: huruf kapital, letter-spacing +30%
-- Paragraf (base, sm): letter-spacing 0, line-height 1.75
+### 1.2 Tipografi
+Font: **Plus Jakarta Sans** untuk teks UI, **JetBrains Mono** untuk kode dan angka tabel. Keduanya dimuat lewat `next/font/google`.
 
-### Jarak
-Kelipatan 8 px: 8, 16, 24, 32, 48, 64, 96. Jangan pakai angka di luar ini kecuali angka yang tertulis eksplisit di bagian 2.
+| Text style FigCraft | Font / weight | Ukuran / line-height | Pemakaian |
+|---|---|---|---|
+| `Sanggar/KPI Metric` | Plus Jakarta Sans Bold | 24 / 30 | Angka KPI besar |
+| `Sanggar/Page Title` | Plus Jakarta Sans Bold | 20 / 26 | Judul halaman |
+| `Sanggar/Card Title` | Plus Jakarta Sans SemiBold | 14 / 20 | Judul kartu |
+| `Sanggar/Body Strong` | Plus Jakarta Sans SemiBold | 12 / 16 | Label dan aksi |
+| `Sanggar/Body Medium` | Plus Jakarta Sans Medium | 12 / 16 | Isi sel tabel |
+| `Sanggar/Label` | Plus Jakarta Sans Medium | 11 / 15 | Meta sekunder |
+| `Sanggar/Badge` | Plus Jakarta Sans SemiBold | 11 / 14 | Status pill |
+| `Sanggar/Helper` | Plus Jakarta Sans Regular | 10 / 14 | Bantuan form |
+| `Sanggar/Data Mono` | JetBrains Mono Medium | 12 / 16 | Kode & angka tabel |
+| `Sanggar/Data Mono SM` | JetBrains Mono Medium | 11 / 15 | Axis & kbd |
+| `Sanggar/Section Caps` | Plus Jakarta Sans SemiBold | 10 / 14, letter-spacing +6% | Label grup navigasi |
 
-### Radius
-- **Kartu dan gambar:** `24`
-- **Panel Tentang:** `32`
-- **Tombol pil:** `999`
-- **Hero:** `0` di semua sudut. Hero berbentuk persegi panjang lurus, tanpa sudut melengkung (tepi bawah Hero lurus)
+Aturan tambahan dari canvas: judul dan nama aplikasi memakai `tracking-[-0.01em]`; angka tabel memakai font mono, tabular, dan rata kanan; huruf kapital kecil hanya untuk `Section Caps`.
 
-### Border
-- `1 px` default. `2 px` hanya untuk emphasis (hover atau fokus).
+### 1.3 Ukuran, jarak, radius
+- Layar acuan: **1440 × 960 px**.
+- Tombol: 36 px (kepala halaman/form) dan 28 px (panel kontrol/baris tabel). Input: 36 px. Kepala tabel: 36 px. Baris tabel: 40 px.
+- Jarak: 4, 8, 12, 16, 24, 32 px. Jarak antar kartu 12–16 px; padding kartu 14–20 px.
+- Radius: 6–8 px untuk kontrol, tabel, dan kartu operasi; 10–16 px untuk kartu/dialog besar; 20 px untuk KPI bento; lingkaran avatar 16 px.
+- Border default: 1 px solid. Tidak boleh ada sudut melengkung pada elemen yang di canvas radiusnya 6 px.
+- Ikon: **Tabler Icons** (MIT), outline, ukuran induk 16 × 16 px dengan garis 1 px (setara Tabler 24 px stroke 1,5 yang diperkecil). Ukuran turunan: 12 px (badge/centang), 14 px (tombol kecil/sel tabel), 16 px (bawaan), 20 px (kepala kartu), 28 px (ubin App Launcher). Ujung dan sambungan garis membulat, tanpa isian kecuali `StarFilled`. Warna mengikuti teks di sebelahnya; merah hanya untuk hapus, hijau untuk berhasil, kuning untuk peringatan. Nama komponen `Icon/<NamaTabler>`, SVG inline, jangan mencampur pustaka ikon lain.
 
-## 2. Tata Letak, Konten, dan Warna per Seksi
-Koordinat (x, y) dihitung dari sudut kiri atas seksi masing-masing. Semua isi seksi (kecuali Hero dan Footer) berada di dalam lebar 1344 px, mulai x = 48 sampai x = 1392.
-### Navbar (menumpuk di atas Hero)
-- **Acuan:** `referensi/navbar-01.png` (susunan: menu kiri, logo tengah, tombol pil kanan) dan bagian atas `referensi/hero-01.png` (navbar menumpuk di atas gradasi).
-- **Posisi:** y = 32, tinggi 56, tanpa latar (transparan). Semua item sejajar vertikal di tengah.
-- **Menu (kiri):** mulai x = 48. Tiga link berurutan dengan jarak 40: "Beranda", "Tentang", "Proyek". Ukuran `base` (16), Medium, putih.
-- **Logo (tengah):** teks "Nama Kamu", rata tengah di x = 720. Ukuran `xl` (24), Bold, putih.
-- **Tombol CTA (kanan):** ujung kanan di x = 1392. Lebar 192, tinggi 56. Bentuk pil, border 1 px putih `#FFFFFF`, latar transparan. Teks "Hubungi Saya" ukuran `base` (16), Medium, putih, padding kiri 24. Di dalam pil, sisi kanan: lingkaran diameter 48 berwarna `#F26A21` dengan ikon panah putih 20 px. Lingkaran menyatu di dalam pil (jarak 4 dari tepi pil), bukan terpisah.
-- **Tindakan klik:** CTA menuju seksi Kontak.
+## 2. Shell umum (berlaku di semua layar bertopbar)
+- Setiap layar adalah frame 1440 × 960 dengan latar `--color-canvas`.
+- `AppTopNav`: 1440 × 52, latar putih, border bawah 1 px `#E2E8F0`, padding kiri/kanan 20 px.
+  - **Left** mulai x = 20, y = 9,5, tinggi 32: `AppLauncher` 32 × 32 r6 latar `#F7F9FC`; logo aplikasi 26 × 26 r6 latar `#77B844`; divider 1 × 20 `#E2E8F0`; menu mulai x = 179 dengan jarak 2 px, tiap item min-height 32 px, padding 12 px, radius 6 px. Item aktif: teks `#3F7A1C` latar `#ECFDF3`; item lain teks `#475569` + chevron 12 px.
+  - **Right** mulai x = 852, y = 9,5, lebar 568, tinggi 32: `CommandSearch` 240 × 32 r6 berisi placeholder `Cari menu, dokumen…` dan kbd `Ctrl K`; tiga `IconButton` 32 × 32 r6 pada x = 252, 296, 340; `Company` 140 × 32 r6 berisi `Sanggar Kriya`; avatar `User` 32 × 32 r16 berisi inisial `BS`.
+- **Body**: mulai y = 52, lebar penuh 1440. `ControlPanel` tinggi 85–98 px, lalu `Content` dengan padding 24 px. Isi dibatasi lebar 1392 px (x = 24 sampai 1416).
+- Kartu: latar putih, border 1 px `#EEF2F6`, radius 6 px, tanpa shadow. Jarak antar kartu 16 px.
+- **Penting:** layar `E ·` tidak memakai sidebar permanen. Navigasi modul ada di `AppTopNav`. Sidebar 220 px hanya ada di frame `Lama ·`/`Arsip Sidebar ·` dan tidak boleh ditambahkan ke template.
 
-### Hero
-- **Acuan:** `referensi/hero-01.png`. Tiru komposisinya persis: foto subjek berukuran besar di tengah, judul raksasa dua baris di kiri, tagline dan deskripsi di kanan, dan empat keahlian bernomor di baris bawah yang membentang selebar halaman. Pengecualian: sudut bawah Hero di referensi membulat, tetapi di desain kita sudut bawah Hero lurus tanpa lengkungan.
-- **Ukuran:** lebar 1440 (penuh, tanpa margin), tinggi 960. Semua sudut Hero radius 0: tepi bawah Hero lurus (garis horizontal lurus dari kiri ke kanan), tidak ada ujung melengkung. Di bawah Hero latar `#0C0C0C`.
-- **Lapisan (dari bawah ke atas):**
-  1. Foto `public/foto/hero.png`. Foto bukan sekadar cover: skala dan posisinya harus diatur agar komposisinya sama dengan orang di `referensi/hero-01.png` (foto close-up setengah badan, kepala besar):
-     - Subjek berada di tengah Hero. Titik tengah kepala di x ≈ 800 (±40), sedikit di kanan tengah halaman seperti di referensi.
-     - Ukuran kepala sama dengan referensi: puncak rambut di y ≈ 96 (±8% dari tepi atas Hero), dagu di y ≈ 700. Tinggi kepala dari puncak rambut sampai dagu ±600 px (±62% tinggi Hero).
-     - Bahu dan dada memanjang sampai tepi bawah Hero. Lengan dan sisa badan terpotong di bawah.
-     - Foto harus menutupi seluruh lebar Hero tanpa celah kosong. Kalau perlu, perbesar sedikit atau pakai frame foto yang lebih besar dari Hero dan dipotong (clip) mengikuti Hero. Kalau FigCraft tidak bisa mengatur skala dan posisi isi gambar, catat di laporan akhir.
-  2. Gradasi hero (bagian 1) di atas foto, opasitas 50%.
-  3. Gradasi gelap di bagian bawah: tinggi 360 dari tepi bawah, dari transparan ke `#0C0C0C` opasitas 85%. Fungsinya agar empat keahlian di bawah terbaca.
-- **Kolom kiri (rata kiri di x = 48, teks maksimal sampai x = 660):**
-  - Sapaan: "Halo, saya". y = 240, `2xl` (32), SemiBold, putih.
-  - Judul: "Software" (baris 1) dan "Engineer" (baris 2). y = 296, ukuran `display` (144), Bold, putih, line-height 1.05 (tinggi tiap baris ±151, blok judul y = 296 sampai 598). Judul harus terlihat sangat besar: lebar kata "Software" ±610 px. Ujung huruf judul boleh sedikit menimpa rambut subjek, tetapi tidak boleh menimpa wajah.
-- **Kolom kanan (rata kiri di x = 976, lebar 416, berakhir di x = 1392):**
-  - Tagline: "Software yang baik terasa mudah dan andal." y = 456, lebar kotak 416, `2xl` (32), SemiBold, putih, line-height 1.35. Pecah menjadi dua baris: "Software yang baik terasa" dan "mudah dan andal."
-  - Deskripsi: "Dari database hingga antarmuka, saya membangun solusi digital yang rapi, skalabel, dan mudah dirawat." y = 566, lebar kotak 416, `base` (16), Regular, putih 70%, line-height 1.75 (tiga baris).
-  - Kolom kanan berada di sebelah kanan wajah subjek, sejajar vertikal dengan bagian tengah Hero seperti di referensi. Teks boleh menimpa rambut atau bahu yang gelap, tetapi tepi kiri teks (x = 976) harus berada di kanan wajah.
-- **Empat keahlian bernomor (baris bawah, selebar halaman dan di tengah):**
-  - Baris ini adalah satu auto layout horizontal selebar 1344 (x = 48 sampai 1392) dengan distribusi "space between". Jangan atur posisi tiap item secara manual dan jangan condong ke kiri.
-  - Item 1 rata kiri di x = 48. Item 4 berakhir tepat di x = 1392. Jarak antar item sama besar. Perkiraan x awal tiap item: 48, 481, 904, 1277. Barisnya simetris terhadap tengah Hero (x = 720).
-  - Nomor di y = 824: tanda `#` berwarna `#F26A21`, angka putih, `base` (16), Bold. Label di y = 856: `lg` (18), Regular, putih.
-  - Isi: `#01` Pengembangan Frontend, `#02` Pengembangan Backend, `#03` Desain Database, `#04` Integrasi API.
-- **Cek:** (1) kepala subjek berukuran besar dan berada di tengah seperti di referensi; (2) judul 144 px di kiri, tagline dan deskripsi di kanan, dan tidak ada teks yang menimpa wajah; (3) empat keahlian tersebar rata dari x = 48 sampai x = 1392 sehingga barisnya terlihat di tengah, bukan di sisi kiri; (4) tidak ada teks menempel ke tepi.
+## 3. Daftar layar dan ukuran persis
 
-### Proyek
-- **Acuan:** `referensi/proyek-01.png`. Tiru: judul raksasa yang digeser ke kanan (tidak rata kiri dan tidak rata kanan penuh), subjudul kecil rata kiri di bawahnya, garis pemisah tipis selebar isi, gambar besar dengan teks dua baris di bawahnya (nama dan kategori), tanpa kotak panel di sekeliling gambar.
-- **Ukuran:** lebar 1440, tinggi 1640, latar `#0C0C0C`.
-- **Judul:** "Proyek". Kotak mulai di x = 624, y = 96. `display-xl` (208), Bold, putih, line-height 1.0 (y = 96 sampai 304).
-- **Subjudul:** "Proyek Terbaru". x = 48, y = 328, `2xl` (32), Regular, putih.
-- **Garis pemisah:** x = 48 sampai 1392, y = 392, tebal 1 px, warna `#FFFFFF40`.
-- **Baris atas (2 kartu), y = 424:**
-  - Kartu kiri x = 48, kartu kanan x = 732. Jarak antar kartu 24. Lebar tiap kartu 660.
-  - Gambar: 660 × 368, radius 24, fit cover, anchor atas.
-  - Teks di bawah gambar (jarak 16 dari gambar), rata kiri, tanpa panel dan tanpa border: nama proyek `xl` (24) Bold putih (y = 808), kategori `base` (16) Regular `#A1A1AA` (y = 840).
-  - Kiri: `public/proyek/github-radar.webp`, nama "GitHub Radar", kategori "Web App".
-  - Kanan: `public/proyek/company-profile.webp`, nama "Company Profile", kategori "Website".
-- **Baris bawah (1 kartu penuh), y = 912:**
-  - x = 48, lebar 1344. Gambar 1344 × 560, radius 24, fit cover, anchor atas.
-  - `public/proyek/landing-page.webp` punya pita ungu di kiri dan kanan. Skalakan gambar agar area konten tengah memenuhi lebar kartu sehingga pita ungu terpotong. Kalau FigCraft tidak bisa mengatur skala dan crop gambar, pakai fit cover saja dan catat di laporan akhir.
-  - Nama "Landing Page" (y = 1488) dan kategori "Website" (y = 1520), gaya sama seperti kartu atas.
-- **Cek:** judul "Proyek" harus sangat besar (208 px), kartu atas sejajar rata, tidak ada ruang kosong besar antara elemen, ruang bawah terakhir 96 px.
+### 3.1 `E · Core - Login` — frame 17194
+- 1440 × 960. Terdiri dari `BrandPanel` 520 × 960 dan `Main` 920 × 960.
+- **BrandPanel:** latar biru tua `#1E5296`, semua teks putih. Brand di x = 56, y = 56: kotak ikon 32 × 32 r8 + teks `Sanggar ERP` 20 px. Pitch di x = 56, y = 255, 408 × 468: ilustrasi 408 × 280, kalimat `Kelola stok, penjualan, pembelian, dan keuangan dari satu akun.` pada y = 300 (408 × 60), tiga baris poin pada y = 380, 416, 452 (tinggi 16). Footer `© 2026 Sanggar Labs · v2.3.1` di x = 56, y = 890.
+- **Main:** `AuthCard` relatif terhadap Main di x = 260, y = 201, berukuran 400 × 523, radius 8, latar putih. Isi: Heading y = 33 (334 × 62), Field y = 111 (334 × 57), tombol utama y = 184 (334 × 36, r8), Divider y = 236 (334 × 15), empat `SSOButton` 334 × 36 r6 pada y = 267, 319, 371, 423, teks bantuan `Belum punya akun? Minta undangan dari administrator Anda.` pada y = 475. Footer kartu di x = 296, y = 744 berisi `Bahasa`, `Bantuan`, `Privasi`, `Status sistem`.
+- **Cek:** panel kiri benar-benar 520 px, kartu login terpusat di panel kanan, tidak ada sidebar/topbar di halaman login.
 
-### Tentang
-- **Acuan:** `referensi/tentang-01.png`. Tiru: tiga kolom dalam satu kartu besar bersudut membulat. Kolom kiri berisi kalimat besar dengan variasi tipis-tebal, kolom tengah foto potret tinggi penuh, kolom kanan berisi label huruf renggang, paragraf pendek, dan daftar tiga item bergaris pemisah. Warna mengikuti token gelap kita, bukan putih seperti referensi.
-- **Ukuran seksi:** lebar 1440, tinggi 976, latar `#0C0C0C`.
-- **Kartu:** x = 48, y = 96, lebar 1344, tinggi 784, radius 32, isi dipotong mengikuti sudut kartu. Tiga kolom tanpa jarak: kiri 416, tengah 544, kanan 384.
-- **Kolom kiri** (x = 0 sampai 416 di dalam kartu): latar `#141414`, padding 32. Kalimat dipusatkan vertikal dan rata kiri, ukuran `3xl` (48), line-height 1.1, empat baris:
-  - "Membangun" (Light 300, putih)
-  - "Software yang" (Light 300, putih)
-  - "Berguna," (Light 300, putih)
-  - "Selalu." (Bold 700, putih)
-- **Kolom tengah** (x = 416 sampai 960): foto `public/foto/tentang.png`, 544 × 784, fit cover, anchor tengah-atas, tanpa radius sendiri (mengikuti kartu).
-- **Kolom kanan** (x = 960 sampai 1344): latar `#141414`, padding 32 (lebar isi 320). Isi dipusatkan vertikal, rata kiri, dari atas ke bawah:
-  - Label: "TENTANG SAYA", `sm` (14), Medium, huruf kapital, letter-spacing +30%, warna `#F26A21`.
-  - Jarak 24.
-  - Bio: "Saya seorang Software Engineer yang suka membangun solusi digital yang rapi dan mudah dirawat. Saya senang belajar teknologi baru dan bekerja sama dengan tim. Saat ini saya terbuka untuk proyek freelance maupun kerja penuh waktu." `base` (16), Regular, `#A1A1AA`, line-height 1.6.
-  - Jarak 32.
-  - Daftar skill, 3 baris, tiap baris tinggi 72 dengan garis atas 1 px `#FFFFFF1A`. Di kiri nomor (`#01`, dst: `#` oranye `#F26A21`, angka putih, `sm` 14, Bold). Di kanannya (mulai 48 dari tepi kiri baris) nama skill `lg` (18) SemiBold putih, dan di bawahnya teknologi `sm` (14) Regular `#A1A1AA`:
-    - `#01` Frontend, "React, Next.js"
-    - `#02` Backend, "Node.js, API"
-    - `#03` Database, "PostgreSQL, Supabase"
-- **Cek:** tiga kolom rata tinggi, foto memenuhi kolom tengah penuh, kalimat besar terbaca dan tidak terpotong.
+### 3.2 `E · Core - App Launcher` — frame 8232
+- 1440 × 960. `Body` 1440 × 464 berisi `AppTopNav` 52 px dan `Content` 412 px.
+- Kolom pencarian utama: `Cari aplikasi, menu, atau dokumen…`.
+- Ubin aplikasi: `Inventory`, `Sales`, `Pembelian`, `Manufaktur`, `Finance`, `CRM`, `Point of Sale`, `Proyek`, `SDM`, `Laporan & BI`.
+- Tautan bawah: `Aplikasi` dan `Pengaturan`.
+- **Cek:** tidak ada sidebar; ubin memakai ikon 28 px dan kartu r12–16 sesuai komponen `ModuleAppCard`.
 
-### Kontak
-- **Acuan:** `referensi/kontak-01.png`. Tiru: judul raksasa selebar halaman di atas, dua kolom di bawahnya (info kecil di kiri, form di kanan dengan input bergaya garis bawah), dan satu baris email dan nomor berukuran besar di paling bawah. Warna mengikuti token gelap kita, bukan putih seperti referensi.
-- **Ukuran:** lebar 1440, tinggi 1064, latar `#0C0C0C`.
-- **Judul:** "Hubungi Saya". x = 48, y = 96. `display-xl` (208), Bold, putih, line-height 1.0, satu baris selebar isi (±1310 px).
-- **Kolom kiri** (x = 48, lebar 480, mulai y = 352), teks `sm` (14), Regular, `#A1A1AA`, line-height 1.5:
-  - Grup 1: "Kota Kamu, Indonesia" dan "2026".
-  - Grup 2 (y = 424): "Jam respons", "Senin - Jumat", "09.00 - 17.00".
-- **Kolom kanan** (form, x = 720, lebar 672). Input bergaya garis bawah (tanpa kotak): teks petunjuk `sm` (14) `#A1A1AA` di atas garis, garis bawah 1 px `#FFFFFF40`, teks yang diketik putih:
-  - Baris 1, y = 352: label "Nama (wajib)" `sm` (14) Bold putih. Dua input sejajar di y = 384, masing-masing lebar 324 dengan jarak 24 (x = 720 dan x = 1068), tinggi 56, petunjuk "Nama Depan" dan "Nama Belakang".
-  - Baris 2, y = 464: "Keperluan", dropdown, lebar penuh 672, tinggi 56, ikon chevron kecil di ujung kanan. Pilihan: Proyek Freelance, Kerja Penuh Waktu, Lainnya.
-  - Baris 3, y = 544: "Email (wajib)", lebar penuh, tinggi 56.
-  - Baris 4, y = 624: "Pesan", lebar penuh, tinggi 112.
-  - Tombol, y = 768: "Kirim", x = 720, lebar 144, tinggi 48, pil, latar `#F26A21`, teks putih `base` (16) Bold.
-- **Baris bawah**, y = 912, tinggi 56, `3xl` (48), Bold, putih:
-  - Email "contoh@gmail.com", rata kiri di x = 48.
-  - Nomor "+62 1234567890", rata kanan, berakhir di x = 1392.
-- **Cek:** judul harus sangat besar dan selebar isi, form rapi sejajar di kolom kanan, email dan nomor besar dan terbaca.
+### 3.3 `E · Core - Dashboard` — frame 12546
+- `ControlPanel` 1440 × 85: `Widget`, `Bulan Ini`, kolom cari `Cari di dashboard…`, periode `Nov 2026`, aksi `Filter`, `Kelompokkan`, `Favorit`, serta keterangan `Diperbarui 2 menit lalu`.
+- `Content` 1440 × 639, padding 24. Kartu KPI:
+  - `Pendapatan` — `Rp 1,28 M`, `+12,4% dari Okt`
+  - `Pesanan Terbuka` — `64`, `18 jatuh tempo minggu ini`
+  - `Nilai Persediaan` — `Rp 486,2 jt`, `+4,1%`
+  - `Menunggu Persetujuan` — `7`, `2 lewat SLA`
+- Panel: `Aktivitas Saya`, `Aplikasi Terpasang` (Inventory, Sales, Pembelian, Manufaktur, Finance), `Kesehatan Sistem`, `Pengumuman`.
+- Teks pengumuman persis: `Stock opname akhir tahun dijadwalkan 28-29 Desember. Penerimaan dan pengiriman dibekukan selama periode hitung.`
+- **Cek:** empat KPI sejajar, angka memakai JetBrains Mono, panel tidak saling menimpa.
 
-### Footer
-- **Acuan:** `referensi/footer-01.png`. Tiru: ikon sosmed dalam lingkaran outline di tengah, teks hak cipta di bawahnya, latar gelap, sangat minimalis.
-- **Ukuran:** lebar 1440 (penuh), tinggi 192, latar `#0C0C0C` (hitam, sama persis dengan background halaman, bukan `#141414`).
-- **Ikon:** tiga lingkaran diameter 48 (GitHub, LinkedIn, Instagram), border 1 px putih `#FFFFFF`, ikon putih 20 px di tengah lingkaran, jarak antar lingkaran 16. Susunan dipusatkan di x = 720, y = 48.
-- **Teks:** "© 2026 Nama Kamu. Seluruh hak cipta dilindungi." rata tengah di x = 720, y = 120, `sm` (14), Regular, `#A1A1AA`.
+### 3.4 `E · Inventory - Overview` — frame 36838
+- `ControlPanel` 1440 × 98: tombol `Baru`, konteks `Gudang Utama`, pencarian `Cari jenis operasi…`, pager `1-6 / 6`, aksi `Filter`, `Kelompokkan`, `Favorit`, ringkasan `6 jenis operasi · 27 dokumen untuk diproses · 3 terlambat`.
+- `Content` 1440 × 592, padding 24.
+  - `OperationGrid` x = 24, y = 20, 1392 × 272: enam `OperationCard` 453 × 128, radius 6, padding 17, kolom x = 0/469/938, baris y = 0/144, jarak 16. Tiap kartu punya `Header` 419 × 37 (y = 15) dan `Body` 419 × 49 (y = 64).
+  - `Panels` x = 24, y = 308, 1392 × 264: `Stok Perlu Perhatian` 996 × 264 (judul x = 17, y = 17; `DataTable` x = 17, y = 49, 962 × 198) dan `Aktivitas Terakhir` 380 × 192 (tiga `ChatterMessage` 346 × 34 pada y = 49, 95, 141).
+- **Cek:** enam kartu operasi terdistribusi rata, panel bawah sejajar, tidak ada celah kosong di kanan.
 
-### Mobile (lebar 390, padding kiri-kanan 24, lebar isi 342)
-Semua seksi ditumpuk satu kolom dengan urutan yang sama dengan Desktop. Gaya, warna, dan font sama. Tinggi menyesuaikan isi.
-- **Navbar:** y = 24, tinggi 48, transparan di atas Hero. Logo "Nama Kamu" di kiri (x = 24), `xl` (20 di Mobile), Bold. Di kanan ikon menu (dua garis horizontal, lebar 28, putih). Menu dan tombol CTA tidak ditampilkan.
-- **Hero:** lebar 390, tinggi 820, semua sudut radius 0 (tepi bawah lurus). Foto `public/foto/hero.png` dengan subjek di tengah (kepala besar, anchor bawah-tengah, bahu sampai tepi bawah Hero), gradasi hero 50%, gradasi gelap bawah tinggi 300. Teks rata kiri di x = 24: sapaan "Halo, saya" (y = 120, 20 px SemiBold), judul "Software Engineer" dua baris (y = 160, `display-m` 72 px Bold, line-height 1.0), tagline (y = 328, 20 px SemiBold, lebar 342), deskripsi (14 px, line-height 1.6, putih 70%, lebar 342). Empat keahlian dalam grid 2 × 2 di dasar Hero (x = 24 dan x = 207, y = 704 dan y = 760): nomor 12 px, label 14 px.
-- **Proyek:** padding atas 64. Judul "Proyek" di x = 24 (`display-m` 72, Bold). Subjudul "Proyek Terbaru" (20 px Regular), garis pemisah `#FFFFFF40`. Tiga kartu bertumpuk dengan jarak 32: gambar 342 × 192 (radius 16, cover, anchor atas), nama proyek 20 px Bold, kategori 14 px `#A1A1AA`.
-- **Tentang:** padding atas 64. Kalimat besar 40 px, line-height 1.1, empat baris dengan variasi Light dan Bold seperti Desktop. Foto 342 × 456 (radius 24, cover). Lalu label "TENTANG SAYA", bio (14 px, line-height 1.6), dan tiga skill (tiap baris tinggi 72) di bawahnya.
-- **Kontak:** padding atas 64. Judul "Hubungi Saya" 48 px Bold satu baris. Info lokasi dan jam respons (14 px). Form selebar 342: tiap input tinggi 56, "Pesan" tinggi 112, tombol "Kirim" selebar 342 tinggi 48. Email dan nomor 24 px Bold, bertumpuk, rata kiri.
-- **Footer:** tinggi 192, latar `#0C0C0C`, sama seperti Desktop, dipusatkan di x = 195.
+### 3.5 `E · Inventory - Produk (List)` — frame 37292
+- `ControlPanel` 1440 × 98: `MainRow` x = 24, y = 13, 1392 × 34; `FilterRow` x = 24, y = 57, 1392 × 28.
+- Teks: `Baru`, `Dapat Disimpan`, `Cari nama, SKU, barcode…`, `1-12 / 248`, `2 dipilih`, `Aksi`, `Ekspor`, `Filter`, `Kelompokkan`, `Favorit`, `248 produk · 9 di bawah minimum`.
+- `Content` 1440 × 633; `DataTable` x = 24, y = 20, 1392 × 593, radius 6.
+- Kolom: `SKU`, `Kategori`, `Tersedia`, `Perkiraan`, `Satuan`, `Biaya`, `Nilai Stok`, `Status`.
+- Baris demo pertama: `Kain Tenun Sumba 200cm` · `SGR-KRY-0042` · `Kerajinan / Tenun` · `128` · `140` · `lembar` · `Rp 185.000` · `Rp 23.680.000`. Baris lain: `Benang Katun Indigo`, `Keranjang Rotan M`, `Pewarna Alam Secang`, `Topeng Kayu Malangan`, `Batik Tulis Lasem 2m`, `Malam Batik Klowong`.
+- **Cek:** angka rata kanan dan mono; tinggi baris 40 px; status memakai `StatusBadge` dengan token status.
 
-## 3. Referensi
-Folder: `referensi/`. Detail apa yang ditiru dari tiap gambar sudah tertulis di baris **Acuan** pada tiap seksi di bagian 2. Ambil gaya dan proporsinya, jangan menyalin layout persis, teks, foto, atau logo.
-- `referensi/navbar-01.png`: untuk Navbar
-- `referensi/hero-01.png`: untuk Hero
-- `referensi/proyek-01.png`: untuk Proyek
-- `referensi/tentang-01.png`: untuk Tentang
-- `referensi/kontak-01.png`: untuk Kontak
-- `referensi/footer-01.png`: untuk Footer
-- `referensi/palet-01.png`: untuk palet dan font (palet gelap dengan aksen oranye, gradasi hangat di hero, tombol pil putih dan oranye, font sans-serif geometris yang tebal)
+### 3.6 `E · Inventory - Produk (Form)` — frame 37944
+- `FormHeader` 1440 × 98: `TitleRow` x = 24, y = 13, 1392 × 34; `ActionRow` x = 24, y = 57, 1392 × 28.
+- Breadcrumb `Inventory / Produk`; judul `Kain Tenun Sumba 200cm`; penanda `1 / 248`.
+- Aksi: `Simpan`, `Perbarui Stok`, `Isi Ulang`, `Cetak Label`.
+- `Content` 1440 × 780: `Main` x = 24, y = 20, 1036 × 740; `Chatter` x = 1076, y = 20, 340 × 269, radius 6.
+- Grup pada Main: `LOGISTIK`, `STOK PER LOKASI`; tab `Catatan` dan `Aktivitas`.
+- Aktivitas demo: `Stok diperbarui: 8 → 128 lembar (WH/IN/00042)`, `Biaya diubah: Rp 180.000 → Rp 185.000`, `Aturan reorder dibuat: min 20, maks 150`, `Produk dibuat`.
+- **Cek:** kolom utama 1036 px dan chatter 340 px terpisah 16 px; tab tidak bergeser saat konten panjang.
 
-**Mood keseluruhan:** gelap, minimalis, modern, dengan aksen oranye hangat, tipografi besar dan tegas.
+### 3.7 `E · Inventory - Penerimaan (List)` — frame 38315
+- `ControlPanel` 1440 × 98 dengan `MainRow` dan `FilterRow` seperti 3.5.
+- Breadcrumb `Inventory / Operasi`; judul `Penerimaan`; status `Siap`; pencarian `Cari referensi, pemasok, dokumen sumber…`; `1-10 / 42`; `2 dipilih`; `Aksi`; `Ekspor`; ringkasan `42 dokumen · 12 siap · 1 terlambat`.
+- `DataTable` x = 24, y = 20, 1392 × 473, radius 6. Kolom: `Referensi`, `Dari`, `Ke`, `Dokumen Sumber`, `Jadwal`, `Penanggung Jawab`, `Status`.
+- Baris demo pertama: `WH/IN/00042` · `Koperasi Tenun Kambera` · `WH/Stok` · `PO-0319` · `22 Nov 2026` · `Siti Rahayu`. Baris berikutnya `WH/IN/00041` (`CV Benang Nusantara`, `PO-0318`) dan `WH/IN/00040` (`UD Rotan Cirebon`, `PO-0315`, `20 Nov 2026`, `Agus Wijaya`).
+- Teks kaki tabel: `Menampilkan 1-10 dari 42 penerimaan`.
+- **Cek:** tabel lebih pendek dari halaman produk (473 vs 593), sesuai canvas; jangan dipaksa sama tinggi.
 
-Catatan: referensi Tentang dan Kontak berlatar terang. Tata letak dan proporsinya diambil dari referensi, tetapi warna tetap mengikuti token di bagian 1.
+### 3.8 State dropdown — frame 43090
+- `TopNavDropdown` x = 281, y = 48, 232 × 148, radius 8, latar putih, border hairline.
+- Enam `MenuItem` 218 × 32, radius 6, pada x = 7 dan y = 7, 41, 75, 109, 143. Label + count: `Penerimaan 12`, `Pengiriman 8`, `Transfer Internal 4`, `Penyesuaian Stok 2`, `Item 0`, `Item 0`.
+- Dropdown menimpa Body, bukan menggeser konten.
 
-## 4. Struktur Frame
-- **Desktop:** lebar 1440, layout vertikal, tanpa padding frame (tiap seksi mengatur padding sendiri sesuai bagian 2).
-  - `Navbar`: tinggi 120 (y = 0 sampai 120), menumpuk di atas `Hero`
-  - `Hero`: tinggi 960
-  - `Proyek`: tinggi 1640
-  - `Tentang`: tinggi 976
-  - `Kontak`: tinggi 1064
-  - `Footer`: tinggi 192
-  - Total tinggi Desktop: 960 + 1640 + 976 + 1064 + 192 = 4832
-- **Mobile:** lebar 390, padding kiri-kanan 24, seksi sama, semua kolom ditumpuk. Tinggi menyesuaikan isi.
+## 4. Responsif dan batasan acuan
+- File Sanggar ERP hanya menyediakan frame 1440 × 960. Tidak ada frame Mobile/tablet untuk layar `E ·`.
+- Di bawah 1024 px, template boleh menyusun ulang menjadi satu kolom, tetapi **wajib** mempertahankan semua token, radius, tipografi, dan komponen di atas. Ini adalah fallback, bukan klaim kemiripan 100%; cantumkan di laporan akhir.
+- Di 1024 px ke atas, seluruh ukuran mengikuti angka di bagian 2 dan 3 tanpa scaling manual.
 
-Aturan penamaan: `Desktop`, `Mobile`, `Navbar`, `Hero`, `Proyek`, `Tentang`, `Kontak`, `Footer`.
+## 5. Pengecekan akhir
+1. Pastikan setiap angka di komponen berasal dari canvas atau token; tidak ada hex atau ukuran baru.
+2. Bandingkan struktur tiap halaman dengan frame ID yang bersangkutan via `inspect_document`/`get_node`, bukan dengan perkiraan.
+3. Pastikan tidak ada gaya portofolio lama, sidebar pada layar `E ·`, atau ikon di luar Tabler.
+4. Laporan akhir berisi: file yang dibuat, tujuh layar yang tercapai, perbedaan terhadap canvas, dan bagian responsif yang tidak memiliki acuan canvas.
